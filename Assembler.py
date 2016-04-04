@@ -1,4 +1,5 @@
 from collections import namedtuple
+from enum import Enum
 import re
 
 HACK_COMMENT = '//'
@@ -26,9 +27,9 @@ RE_COMMAND = '|'.join(command for command in [RE_A_COMMAND, RE_C_COMMAND, RE_L_C
 RE_COMMAND_PATTERN = re.compile(RE_COMMAND)
 
 def parse(lines):
-"""Parse the code lines, return a list of the commands
-    linesIter: iterator for the lines in the code file
-    return: a list of named tuples for the commands"""
+	"""Parse the code lines, return a list of the commands
+		linesIter: iterator for the lines in the code file
+		return: a list of named tuples for the commands"""
 	parsed = []
 
 	for line in lines:
@@ -63,17 +64,17 @@ def parse(lines):
 
 	return parsed
 
-def encode(lines)
-"""Receives a list of commands as output by the parser, and encodes
-string for the command"""
+def encode(lines):
+	"""Receives a list of commands as output by the parser, and encodes
+	string for the command"""
 	pass
 
 def resloveSymbols(lines):
-"""Receives a list of parsed lines, resolves the symbols and references
+	"""Receives a list of parsed lines, resolves the symbols and references
     lines: List of lines as output by parser
     return: List of lines, with symbols resolved"""
 	pass
 
 def assemble(lines):
-"""Manage the assembly process"""
+	"""Manage the assembly process"""
 	pass
