@@ -1,5 +1,6 @@
 from collections import namedtuple
 from enum import Enum
+import os
 import sys
 import re
 
@@ -209,18 +210,40 @@ def assemble(lines):
 
 	return code
 
+def assemble_file(filepath):
+	"""Assemble a file by filepath"""
+	with open(filepath, 'r') as file:
+		return assemble(file.readlines())
+
+def batch_assembly(dirpath):
+	"""Batch assemble a directory, save all files to matching names as required"""
+	for file in os.listdir(dirpath):
+		file_path = os.path.join(dirpath, file)
+		file_path_no_ext, file_ext = os.path.splitext(file)
+		# Choose only asm files
+		if os.path.isfile(file_path) and file_ext.lower()=='.asm':
+			code = assemble_file(file_path)
+			with open(file_path_no_ext+'.hack', 'w') as ofile:
+				ofile.write('\n'.join(code))
+
 def main():
 	"""The main program, loading the file and calling the assembler"""
 	if len(sys.argv) < 2:
 		print("Missing file parameter... Failure")
 		sys.exit(1)
 
-	# Read given file
-	with open(sys.argv[1], 'r') as file:
-		
-		lines = file.readlines()
-		code = assemble(lines)
+	input_path = sys.argv[1]
+
+	if os.path.isdir(input_path):
+		batch_assembly(input_path)
+	elif os.path.isfile(input_path):
+		code = assemble_file(input_path)
 		print('\n'.join(code))
+	else:
+		print("Invalid argument supplied!")
+		sys.exit(1)
+
+	# Read given file
 
 if __name__=="__main__":
 	main()
