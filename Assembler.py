@@ -7,6 +7,7 @@ class CommandTypes(Enum):
 
 ParsedLine = namedtuple('ParsedLine', ['type', 'command'])
 
+# TODO implement a shift operation
 compDict = {'0':        '0101010',
             '1':        '0111111',
             '-1':       '0111010',
