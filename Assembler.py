@@ -18,11 +18,39 @@ def encode(lines)
 string for the command"""
 	pass
 
-def resloveSymbols(lines):
+def resolveSymbols(lines):
 """Receives a list of parsed lines, resolves the symbols and references
     lines: List of lines as output by parser
     return: List of lines, with symbols resolved"""
-	pass
+
+        symbolTable = {"SP":    0,
+                       "LCL":   1,
+                       "ARG":   2,
+                       "THIS":  3,
+                       "THAT":  4,
+                       "SCREEN":16384,
+                       "KBD":   24576}
+
+        for i in range(16):
+                symbolTable["R" + str(i)] = i
+        
+        currSymbolLine = 1024
+
+        resolvedLines = []
+
+        for line in lines:
+                if line.type == CommandTypes.L_command or line.type == CommandTypes.A_command and type(line.command)==str:
+                        if line.command not in symbolTable:
+                                symbolTable[line.command] = currSymbolLine
+                                currSymbolLine += 1
+
+                        if line.type == CommandTypes.A_command:
+                                line.command = symbolTable[line.command]
+
+                if line.type != CommandTypes.L_command:
+                        resolvedLines.append(line)
+
+        return resolvedLines
 
 def assemble(lines):
 """Manage the assembly process"""
