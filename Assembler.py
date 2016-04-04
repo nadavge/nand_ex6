@@ -57,13 +57,17 @@ def resolveSymbols(lines):
 		# Skip L commands
 		if line.type == CommandTypes.L_command:
 			continue
+
 		# If A command and not numeric, resolve
 		elif line.type == CommandTypes.A_command and not line.command.isnumeric():
 			if line.command not in symbolTable:
 				symbolTable[line.command] = currSymbolAddr
 				currSymbolAddr += 1
 
-			resolvedLines.append(ParsedLine(line.type, symbolTable[line.command]))
+			# All symbol values are passed as str.. sorry
+			symbolVal = str(symbolTable[line.command])
+			resolvedLines.append(ParsedLine(line.type, symbolVal))
+
 		else:
 			resolvedLines.append(line)
 
