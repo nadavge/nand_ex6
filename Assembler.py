@@ -5,7 +5,6 @@ import sys
 import re
 
 HACK_COMMENT = '//'
-
 INITIAL_SYMBOL_ADDRESS = 16
 
 class CommandTypes(Enum):
@@ -14,6 +13,7 @@ class CommandTypes(Enum):
 	L_command = 2
 
 ParsedLine = namedtuple('ParsedLine', ['type', 'command'])
+
 
 # Based on constants and symbols, page 72
 RE_SYMBOL = '[\w\.\$_:][\d\w\.\$_:]*'
@@ -67,6 +67,7 @@ def parse(lines):
 			print("Unable to match line: ", line)
 
 	return parsed
+
 
 compDict = {
 		'0':	 '1110101010',
@@ -147,6 +148,7 @@ def encode(lines):
 
 	return encoded
 
+
 def resolveSymbols(lines):
 	"""Receives a list of parsed lines, resolves the symbols and references
     lines: List of lines as output by parser
@@ -202,6 +204,7 @@ def resolveSymbols(lines):
 
 	return resolvedLines
 
+
 def assemble(lines):
 	"""Manage the assembly process"""
 	parsed = parse(lines)
@@ -210,21 +213,27 @@ def assemble(lines):
 
 	return code
 
-def assemble_file(filepath):
-	"""Assemble a file by filepath"""
-	with open(filepath, 'r') as file:
-		return assemble(file.readlines())
 
-def batch_assembly(dirpath):
+def assemble_file(file_path):
+	"""Assemble a file by filepath, save the result"""
+	with open(file_path, 'r') as file:
+		code = assemble(file.readlines())
+
+		file_no_ext, _ = os.path.splitext(file_path)
+		ofile_path = file_no_ext+'.hack'
+		with open(ofile_path, 'w') as ofile:
+			ofile.write('\n'.join(code))
+
+
+def batch_assembly(dir_path):
 	"""Batch assemble a directory, save all files to matching names as required"""
-	for file in os.listdir(dirpath):
-		file_path = os.path.join(dirpath, file)
-		file_path_no_ext, file_ext = os.path.splitext(file)
+	for file in os.listdir(dir_path):
+		file_path = os.path.join(dir_path, file)
+		_, file_ext = os.path.splitext(file_path)
 		# Choose only asm files
 		if os.path.isfile(file_path) and file_ext.lower()=='.asm':
 			code = assemble_file(file_path)
-			with open(file_path_no_ext+'.hack', 'w') as ofile:
-				ofile.write('\n'.join(code))
+
 
 def main():
 	"""The main program, loading the file and calling the assembler"""
@@ -237,13 +246,11 @@ def main():
 	if os.path.isdir(input_path):
 		batch_assembly(input_path)
 	elif os.path.isfile(input_path):
-		code = assemble_file(input_path)
-		print('\n'.join(code))
+		assemble_file(input_path)
 	else:
 		print("Invalid argument supplied!")
 		sys.exit(1)
 
-	# Read given file
 
 if __name__=="__main__":
 	main()
