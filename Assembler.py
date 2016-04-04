@@ -1,5 +1,6 @@
 from collections import namedtuple
 from enum import Enum
+import sys
 import re
 
 HACK_COMMENT = '//'
@@ -202,4 +203,24 @@ def resolveSymbols(lines):
 
 def assemble(lines):
 	"""Manage the assembly process"""
-	pass
+	parsed = parse(lines)
+	resolved = resolveSymbols(parsed)
+	code = encode(resolved)
+
+	return code
+
+def main():
+	"""The main program, loading the file and calling the assembler"""
+	if len(sys.argv) < 2:
+		print("Missing file parameter... Failure")
+		sys.exit(1)
+
+	# Read given file
+	with open(sys.argv[1], 'r') as file:
+		
+		lines = file.readlines()
+		code = assemble(lines)
+		print('\n'.join(code))
+
+if __name__=="__main__":
+	main()
