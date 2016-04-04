@@ -125,13 +125,14 @@ def encode(lines):
 
 	for line in lines:
 		if line.type == CommandTypes.A_command:
-			encodedLine = str(bin(line.command))[2:].rjust(16, '0')
+			value = int(line.command)
+			encodedLine = format(value, '016b')
 
 		elif line.type == CommandTypes.C_command:
 			command = line.command
-			dest = command.dest
-			comp = command.comp
-			jump = command.jump
+			dest = command['dest']
+			comp = command['comp']
+			jump = command['jump']
 
 			if dest is None:
 				dest = ''
