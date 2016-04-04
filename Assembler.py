@@ -58,6 +58,8 @@ def parse(lines):
 			command = {'dest': dest, 'comp': comp, 'jump': jump}
 			parsed.append(ParsedLine(CommandTypes.C_command, command))
 		elif match.group('L_label'):
+			# TODO decide where to handle the conversion from int to num, since
+			# in the resolver we save them as integers
 			parsed.append(ParsedLine(CommandTypes.L_command, match.group('L_label')))
 		else:
 			print("Unable to match line: ", line)
