@@ -11,7 +11,7 @@ class CommandTypes(Enum):
 
 ParsedLine = namedtuple('ParsedLine', ['type', 'command'])
 
-# Based on constans and symbols, page 72
+# Based on constants and symbols, page 72
 RE_SYMBOL = '[\w\.\$_:][\d\w\.\$_:]*'
 RE_A_COMMAND = '^@(?P<A_value>\d+|{symbol})$'.format(symbol=RE_SYMBOL)
 RE_C_DEST = '(?P<C_dest>.+?)'
@@ -22,13 +22,13 @@ RE_C_COMMAND = '^(?P<C_command>({dest}=)?{comp}(;{jump})?)$'.format(
 		comp=RE_C_COMP,
 		jump=RE_C_JUMP
 	)
-RE_L_COMMAND = '^\(?P<L_label>{symbol}\)$'.format(symbol=RE_SYMBOL)
-RE_COMMAND = '|'.join(command for command in [RE_A_COMMAND, RE_C_COMMAND, RE_L_COMMAND])
+RE_L_COMMAND = '^\((?P<L_label>{symbol})\)$'.format(symbol=RE_SYMBOL)
+RE_COMMAND = '|'.join(command for command in [RE_A_COMMAND, RE_L_COMMAND, RE_C_COMMAND])
 RE_COMMAND_PATTERN = re.compile(RE_COMMAND)
 
 def parse(lines):
 	"""Parse the code lines, return a list of the commands
-		linesIter: iterator for the lines in the code file
+		lines: iterator for the lines in the code file
 		return: a list of named tuples for the commands"""
 	parsed = []
 
